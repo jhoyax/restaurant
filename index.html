@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Restaurants</title>
+	<link rel="stylesheet" type="text/css" href="/restaurant/assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/restaurant/assets/css/chartjs/Chart.min.css">
+</head>
+<body>
+	<div id="floating-panel">
+		<ul>
+			<li>
+				<label>
+					<input type="radio" name="view" checked="checked" onchange="handleChangeRestaurantInCebu()" value="restaurants_in_cebu">
+					Restaurants in Cebu
+				</label>
+			</li>
+			<li>
+				<label>
+					<input type="radio" name="view" onchange="handleChangeDrawShape()" value="draw_shape">
+					Draw shape and get total restaurants
+				</label>
+			</li>
+		</ul>
+	</div>
+	
+	<div id="map"></div>
+	<div id="data-section">
+		<div class="half">
+			<ul id="restaurant-listing">
+			</ul>
+		</div>
+		<div class="half white-bg">
+			<div class="chart" id="chart-container">
+				<h1 align="center">Restaurant Analytics</h1>
+				<canvas id="line-chart"></canvas>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="/restaurant/assets/js/chartjs/Chart.min.js"></script>
+	<script type="text/javascript" src="/restaurant/assets/js/main.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZNJTWHqkQ1Goh8VdWoaOOcY--LO1vKVI&libraries=places,drawing&callback=initMap"
+    async defer></script>
+</body>
+</html>
