@@ -35,7 +35,9 @@ function initMap() {
 	infowindow = new google.maps.InfoWindow();
 	service = new google.maps.places.PlacesService(map);
 	directionsService = new google.maps.DirectionsService;
-	directionsDisplay = new google.maps.DirectionsRenderer;
+	directionsDisplay = new google.maps.DirectionsRenderer({
+		suppressMarkers: true
+	});
 
 	directionsDisplay.setMap(map);
 
@@ -201,7 +203,6 @@ function createRestaurantMarker(place) {
 		google.maps.event.addListener(infowindow, 'closeclick', function() {
 			// remove direction in map
 	        directionsDisplay.setMap(null);
-	        directionsDisplay = null;
 		});
 	});
 
