@@ -267,11 +267,25 @@ function handleChangeRestaurantInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
+	
 	markers = deleteMarkers(markers);
 	shapeMarkers = deleteMarkers(shapeMarkers);
 
+	directionsDisplay.setMap(null);
+
 	deleteAllShape();
+
+	// clear data when switching filter
+	restaurants = [];
+	addChartData();
+	document.getElementById('restaurant-listing').innerHTML = '';
+	document.getElementById('specialty-list').querySelectorAll('li > label > input[type="checkbox"]').forEach(function(element){
+		element.checked = false;
+	});
+	
 	getCurrentLocation();
+	
+	// plot all restaurant in cebu
 	getRestaurantsInCebu();
 
 	document.getElementById('specialty-list').style.display = "none";
@@ -284,7 +298,18 @@ function handleChangeDrawShape() {
 	drawingManager.setOptions({
 	  drawingControl: true
 	});
+
 	markers = deleteMarkers(markers);
+	
+	directionsDisplay.setMap(null);
+
+	// clear data when switching filter
+	restaurants = [];
+	addChartData();
+	document.getElementById('restaurant-listing').innerHTML = '';
+	document.getElementById('specialty-list').querySelectorAll('li > label > input[type="checkbox"]').forEach(function(element){
+		element.checked = false;
+	});
 
 	document.getElementById('specialty-list').style.display = "none";
 }
@@ -297,17 +322,20 @@ function handleChangeRestaurantSpecialtyInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
+	
 	markers = deleteMarkers(markers);
 	shapeMarkers = deleteMarkers(shapeMarkers);
 
+	directionsDisplay.setMap(null);
+
 	deleteAllShape();
-	getCurrentLocation();
 
 	// clear data when switching filter
 	restaurants = [];
 	addChartData();
 	document.getElementById('restaurant-listing').innerHTML = '';
 
+	getCurrentLocation();
 	document.getElementById('specialty-list').style.display = "block";
 }
 
