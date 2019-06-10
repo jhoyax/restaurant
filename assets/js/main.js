@@ -9,7 +9,7 @@ var drawingManager;
 var markers = [];
 var allShape = [];
 var shapeMarkers = [];
-var food_specialty = [];
+var foodSpecialty = [];
 
 var restaurantsLabel = [];
 var visitorData = [];
@@ -49,16 +49,32 @@ function initMap() {
 /**
  * Get restaurants in cebu
  */
-function getRestaurantsInCebu() {
+function getRestaurantsInCebu(query = '', clearData = true) {
 	// text search request
 	let request = {
-		query: 'restaurant in Cebu',
+		query: query + 'restaurant in Cebu',
 		type: 'restaurant'
 	};
+	if(clearData)
+	{
+		restaurants = [];
+		document.getElementById('restaurant-listing').innerHTML = '';
+		addChartData();
+	}
 	service.textSearch(request, function(results, status, pagetoken) {
 	 	if (status === google.maps.places.PlacesServiceStatus.OK) {
 		    for (let i = 0; i < results.length; i++) {
-		        restaurants.push(results[i]);
+		    	let result = results[i];
+
+		        // generate random data for vistor and revenue
+		        let min=1, max=500, random = 0;
+		    	random =Math.floor(Math.random() * (+max - +min)) + +min
+		    	result.visitor = random;
+		    	random =Math.floor(Math.random() * (+max - +min)) + +min
+		    	result.revenue = random;
+
+		        restaurants.push(result);
+
 		        /*
 		    	// save restaurant details in array
 		    	let req = {
@@ -72,16 +88,15 @@ function getRestaurantsInCebu() {
 		    	});
 		    	*/
 
-		    	createRestaurantListingHTML(results[i]);
-		    	createRestaurantMarker(results[i]);
+		    	createRestaurantListingHTML(result);
+		    	createRestaurantMarker(result);
 		    }
 
 		    // get next page
 		    if (pagetoken.hasNextPage) {
 		        pagetoken.nextPage();
-		    } else {
-		    	addChartData();
 		    }
+		  	addChartData();
 	  	}
 	});
 }
@@ -174,15 +189,15 @@ function createRestaurantMarker(place) {
 	});
 
 	google.maps.event.addListener(marker, 'click', function() {
-		let food_specialty_html = '';
-		if(food_specialty[place.place_id])
-			food_specialty_html = '<p>'+food_specialty[place.place_id]+'</p>';
+		let foodSpecialtyHTML = '';
+		if(foodSpecialty[place.place_id])
+			foodSpecialtyHTML = '<p>'+foodSpecialty[place.place_id]+'</p>';
 
 		let content = '<div class="infowindow">' +
 			'<div class="row">' +
 				'<img class="place-icon" src="' + place.icon + '"> ' +
 				'<b class="title">' + place.name + '</b>' +
-				food_specialty_html +
+				foodSpecialtyHTML +
 			'</div>' +
 			'<div class="row">' +
 				'<a href="javascript:void(0)" id="getDirection" data-placeid="'+ place.place_id +'">' +
@@ -264,19 +279,74 @@ function handleChangeRestaurantInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
-	deleteMarkers(shapeMarkers);
+	shapeMarkers = deleteMarkers(shapeMarkers);
+	markers = deleteMarkers(markers);
 	deleteAllShape();
-	showMarkers();
+	getCurrentLocation();
+
+	document.getElementById('specialty-list').style.display = "none";
+	getRestaurantsInCebu();
 }
 
 /**
  * Handle change event to draw shape
  */
 function handleChangeDrawShape() {
-	hideMarkers();
 	drawingManager.setOptions({
 	  drawingControl: true
 	});
+	markers = deleteMarkers(markers);
+	document.getElementById('specialty-list').style.display = "none";
+}
+
+/**
+ * Handle change event to show restaurants in cebu by specialty
+ */
+function handleChangeRestaurantSpecialtyInCebu() {
+	drawingManager.setOptions({
+		drawingMode: null,
+	  	drawingControl: false
+	});
+	shapeMarkers = deleteMarkers(shapeMarkers);
+	markers = deleteMarkers(markers);
+	deleteAllShape();
+	getCurrentLocation();
+	
+	// clear data when switching filter
+	restaurants = [];
+	document.getElementById('restaurant-listing').innerHTML = '';
+	markers = deleteMarkers(markers);
+	addChartData();
+
+	document.getElementById('specialty-list').style.display = "block";
+	handleChangeSpecialty();
+}
+
+/**
+ * Handle change event to show specialty
+ */
+function handleChangeSpecialty() {
+	let specialtyLists = document.querySelectorAll('input[name="specialty"]:checked');
+	if(specialtyLists.length)
+	{
+		let query = '';
+		for (let i = 0; i < specialtyLists.length; i++) {
+			query += specialtyLists[i].value;
+			
+			if(i < (specialtyLists.length-1))
+				query += ' and ';
+		}
+		query += ' ';
+		getRestaurantsInCebu(query, false);
+	}
+	else
+	{
+		// clear data when switching filter
+		restaurants = [];
+		document.getElementById('restaurant-listing').innerHTML = '';
+		markers = deleteMarkers(markers);
+		addChartData();
+	}
 }
 
 /**
@@ -304,12 +374,17 @@ function showMarkers() {
  * Delete markers in map
  * 
  * @param {arr} markerList - Marker List
+ * @return {arr} Return blank array
  */
 function deleteMarkers(markerList) {
     //Loop through all the markers and remove
     for (let i = 0; i < markerList.length; i++) {
         markerList[i].setMap(null);
     }
+    
+    infowindow.close();
+
+    return [];
 }
 
 /**
@@ -344,7 +419,7 @@ function onClickSave(el) {
 			addChartData();
 		if(input.name == 'food_specialty')
 		{
-			food_specialty[parent_li.getAttribute('data-placeid')] = input.value;
+			foodSpecialty[parent_li.getAttribute('data-placeid')] = input.value;
 
 			// close info window to refresh content
 			infowindow.close();
@@ -431,21 +506,12 @@ function createRestaurantListingHTML(place) {
 	let html = '<li data-placeid="' + place.place_id + '">' +
 					'<h3>' + place.name + '</h3>' +
 					'<table id="restaurant-details-table">' +
-						'<tbody><tr>' +
-							'<td class="td-label">' +
-								'Food Specialty' +
-							'</td>' +
-							'<td class="td-actions">' +
-								'<input type="text" readonly="" name="food_specialty"> ' +
-								'<input type="button" value="Edit" class="btn-edit" onclick="onClickEdit(this)">' +
-							'</td>' +
-						'</tr>' +
 						'<tr>' +
 							'<td class="td-label">' +
 								'Visitor' +
 							'</td>' +
 							'<td class="td-actions">' +
-								'<input type="number" readonly="" name="visitor" min="0"> ' +
+								'<input type="number" readonly="" name="visitor" min="0" value="' + place.visitor + '"> ' +
 								'<input type="button" value="Edit" class="btn-edit" onclick="onClickEdit(this)">' +
 							'</td>' +
 						'</tr>' +
@@ -454,7 +520,7 @@ function createRestaurantListingHTML(place) {
 								'Revenue' +
 							'</td>' +
 							'<td class="td-actions">' +
-								'<input type="number" readonly="" name="revenue" min="0"> ' +
+								'<input type="number" readonly="" name="revenue" min="0" value="' + place.revenue + '"> ' +
 								'<input type="button" value="Edit" class="btn-edit" onclick="onClickEdit(this)">' +
 							'</td>' +
 						'</tr>' +

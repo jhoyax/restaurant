@@ -16,6 +16,44 @@
 			</li>
 			<li>
 				<label>
+					<input type="radio" name="view" onchange="handleChangeRestaurantSpecialtyInCebu()" value="restaurants_in_cebu">
+					Restaurants in Cebu by Specialty
+				</label>
+				<ul id="specialty-list" style="display: none;">
+					<li>
+						<label><input type="checkbox" name="specialty" value="Lechon" onchange="handleChangeSpecialty()"> Lechon<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Pizza" onchange="handleChangeSpecialty()"> Pizza<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Burger" onchange="handleChangeSpecialty()"> Burger<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Siomai" onchange="handleChangeSpecialty()"> Siomai<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Ngohiong" onchange="handleChangeSpecialty()"> Ngohiong<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Pochero" onchange="handleChangeSpecialty()"> Pochero<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Ramen" onchange="handleChangeSpecialty()"> Ramen<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Sutukil" onchange="handleChangeSpecialty()"> Sutukil<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Barbecue" onchange="handleChangeSpecialty()"> Barbecue<label>
+					</li>
+					<li>
+						<label><input type="checkbox" name="specialty" value="Halo-Halo" onchange="handleChangeSpecialty()"> Halo-Halo<label>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<label>
 					<input type="radio" name="view" onchange="handleChangeDrawShape()" value="draw_shape">
 					Draw shape and get total restaurants
 				</label>
@@ -39,7 +77,7 @@
 
 	<script type="text/javascript" src="/restaurant/assets/js/chartjs/Chart.min.js"></script>
 	<script type="text/javascript" src="/restaurant/assets/js/main.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZNJTWHqkQ1Goh8VdWoaOOcY--LO1vKVI&libraries=places,drawing&callback=initMap"
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjrH4k-Yf2FHme-vaBng_4r2EbBbsMbIk&libraries=places,drawing&callback=initMap"
     async defer></script>
 </body>
 </html>
