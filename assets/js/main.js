@@ -47,18 +47,16 @@ function initMap() {
 /**
  * Get restaurants in cebu
  */
-function getRestaurantsInCebu(query = '', clearData = true) {
+function getRestaurantsInCebu(query = '') {
 	// text search request
+	let current_specialty = query;
+	if(query != '')
+		current_specialty = query + ' ';
+
 	let request = {
-		query: query + 'restaurant in Cebu',
+		query: current_specialty + 'restaurant in Cebu',
 		type: 'restaurant'
 	};
-	if(clearData)
-	{
-		restaurants = [];
-		document.getElementById('restaurant-listing').innerHTML = '';
-		addChartData();
-	}
 	service.textSearch(request, function(results, status, pagetoken) {
 	 	if (status === google.maps.places.PlacesServiceStatus.OK) {
 		    for (let i = 0; i < results.length; i++) {
@@ -70,24 +68,12 @@ function getRestaurantsInCebu(query = '', clearData = true) {
 		    	result.visitor = random;
 		    	random =Math.floor(Math.random() * (+max - +min)) + +min
 		    	result.revenue = random;
-
-		        restaurants.push(result);
-
-		        /*
-		    	// save restaurant details in array
-		    	let req = {
-		          	placeId: results[i].place_id
-		        };
-		    	service.getDetails(req, function(place, stat) {
-		    		if (stat === google.maps.places.PlacesServiceStatus.OK)
-		    			restaurants.push(place);
-		    		else
-		    			restaurants.push(results[i]);
-		    	});
-		    	*/
+		    	result.specialty = query;
 
 		    	createRestaurantListingHTML(result);
-		    	createRestaurantMarker(result);
+		    	result.marker = createRestaurantMarker(result);
+
+		        restaurants.push(result);
 		    }
 
 		    // get next page
@@ -178,6 +164,7 @@ function createDrawingManager() {
  * Create Marker
  * 
  * @param {object} place - Place Result
+ * @return {object} Returns marker object
  */
 function createRestaurantMarker(place) {
 	let marker = new google.maps.Marker({
@@ -221,6 +208,8 @@ function createRestaurantMarker(place) {
 
 	// save marker
 	markers.push(marker);
+
+	return marker;
 }
 
 /**
@@ -278,13 +267,14 @@ function handleChangeRestaurantInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
-	shapeMarkers = deleteMarkers(shapeMarkers);
 	markers = deleteMarkers(markers);
+	shapeMarkers = deleteMarkers(shapeMarkers);
+
 	deleteAllShape();
 	getCurrentLocation();
+	getRestaurantsInCebu();
 
 	document.getElementById('specialty-list').style.display = "none";
-	getRestaurantsInCebu();
 }
 
 /**
@@ -295,6 +285,7 @@ function handleChangeDrawShape() {
 	  drawingControl: true
 	});
 	markers = deleteMarkers(markers);
+
 	document.getElementById('specialty-list').style.display = "none";
 }
 
@@ -306,37 +297,43 @@ function handleChangeRestaurantSpecialtyInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
+	markers = deleteMarkers(markers);
 	shapeMarkers = deleteMarkers(shapeMarkers);
+
 	deleteAllShape();
+	getCurrentLocation();
+
+	// clear data when switching filter
+	restaurants = [];
+	addChartData();
+	document.getElementById('restaurant-listing').innerHTML = '';
 
 	document.getElementById('specialty-list').style.display = "block";
-	handleChangeSpecialty();
-
-	getCurrentLocation();
 }
 
 /**
  * Handle change event to show specialty
  */
-function handleChangeSpecialty() {
-	// clear data when switching filter
-	restaurants = [];
-	document.getElementById('restaurant-listing').innerHTML = '';
-	markers = deleteMarkers(markers);
-	addChartData();
-
-	let specialtyLists = document.querySelectorAll('input[name="specialty"]:checked');
-	if(specialtyLists.length)
-	{
-		let query = '';
-		for (let i = 0; i < specialtyLists.length; i++) {
-			query += specialtyLists[i].value;
-			
-			if(i < (specialtyLists.length-1))
-				query += ' and ';
+function handleChangeSpecialty(el) {
+	if(el.checked) {
+		getRestaurantsInCebu(el.value);
+	} else {
+		let newRestaurants = [];
+		// remove markers of restaurant that has the current specialty
+		for (let i=0; i < restaurants.length; i++) {
+			if(restaurants[i].specialty == el.value)
+			{
+				// remove marker
+				restaurants[i].marker.setMap(null);
+				infowindow.close();
+				// remove in listing
+				document.getElementById('restaurant-listing').querySelector('li[data-placeid="' + restaurants[i].place_id + '"]').remove();
+			} else {
+				newRestaurants.push(restaurants[i]);
+			}
 		}
-		query += ' ';
-		getRestaurantsInCebu(query, false);
+		restaurants = newRestaurants;
+		addChartData();
 	}
 }
 
