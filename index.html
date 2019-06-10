@@ -1,82 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<title>Restaurants</title>
-	<link rel="stylesheet" type="text/css" href="/restaurant/assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="/restaurant/assets/css/main.css?v=1.2">
 	<link rel="stylesheet" type="text/css" href="/restaurant/assets/css/chartjs/Chart.min.css">
 </head>
 <body>
-	<div id="floating-panel">
-		<ul>
-			<li>
-				<label>
-					<input type="radio" name="view" checked="checked" onchange="handleChangeRestaurantInCebu()" value="restaurants_in_cebu">
-					Restaurants in Cebu
-				</label>
-			</li>
-			<li>
-				<label>
-					<input type="radio" name="view" onchange="handleChangeRestaurantSpecialtyInCebu()" value="restaurants_in_cebu">
-					Restaurants in Cebu by Specialty
-				</label>
-				<ul id="specialty-list" style="display: none;">
+	<div id="side-panel">
+		<div class="accordion-group">
+			<button class="accordion">Filters</button>
+			<div class="panel hide">
+				<ul>
 					<li>
-						<label><input type="checkbox" name="specialty" value="Lechon" onchange="handleChangeSpecialty()"> Lechon<label>
+						<label>
+							<input type="radio" name="view" checked="checked" onchange="handleChangeRestaurantInCebu()" value="restaurants_in_cebu">
+							Restaurants in Cebu
+						</label>
 					</li>
 					<li>
-						<label><input type="checkbox" name="specialty" value="Pizza" onchange="handleChangeSpecialty()"> Pizza<label>
+						<label>
+							<input type="radio" name="view" onchange="handleChangeRestaurantSpecialtyInCebu()" value="restaurants_in_cebu">
+							Restaurants in Cebu by Specialty
+						</label>
+						<ul id="specialty-list" style="display: none;">
+							<li>
+								<label><input type="checkbox" name="specialty" value="Lechon" onchange="handleChangeSpecialty()"> Lechon<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Pizza" onchange="handleChangeSpecialty()"> Pizza<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Burger" onchange="handleChangeSpecialty()"> Burger<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Siomai" onchange="handleChangeSpecialty()"> Siomai<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Ngohiong" onchange="handleChangeSpecialty()"> Ngohiong<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Pochero" onchange="handleChangeSpecialty()"> Pochero<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Ramen" onchange="handleChangeSpecialty()"> Ramen<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Sutukil" onchange="handleChangeSpecialty()"> Sutukil<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Barbecue" onchange="handleChangeSpecialty()"> Barbecue<label>
+							</li>
+							<li>
+								<label><input type="checkbox" name="specialty" value="Halo-Halo" onchange="handleChangeSpecialty()"> Halo-Halo<label>
+							</li>
+						</ul>
 					</li>
 					<li>
-						<label><input type="checkbox" name="specialty" value="Burger" onchange="handleChangeSpecialty()"> Burger<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Siomai" onchange="handleChangeSpecialty()"> Siomai<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Ngohiong" onchange="handleChangeSpecialty()"> Ngohiong<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Pochero" onchange="handleChangeSpecialty()"> Pochero<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Ramen" onchange="handleChangeSpecialty()"> Ramen<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Sutukil" onchange="handleChangeSpecialty()"> Sutukil<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Barbecue" onchange="handleChangeSpecialty()"> Barbecue<label>
-					</li>
-					<li>
-						<label><input type="checkbox" name="specialty" value="Halo-Halo" onchange="handleChangeSpecialty()"> Halo-Halo<label>
+						<label>
+							<input type="radio" name="view" onchange="handleChangeDrawShape()" value="draw_shape">
+							Draw shape and get total restaurants
+						</label>
 					</li>
 				</ul>
-			</li>
-			<li>
-				<label>
-					<input type="radio" name="view" onchange="handleChangeDrawShape()" value="draw_shape">
-					Draw shape and get total restaurants
-				</label>
-			</li>
-		</ul>
-	</div>
-	
-	<div id="map"></div>
-	<div id="data-section">
-		<div class="half">
-			<ul id="restaurant-listing">
-			</ul>
+			</div>
 		</div>
-		<div class="half white-bg">
-			<div class="chart" id="chart-container">
-				<h1 align="center">Restaurant Analytics</h1>
-				<canvas id="line-chart"></canvas>
+		<div class="accordion-group">
+			<button class="accordion">Analytics</button>
+			<div class="panel hide">
+				<div class="chart" id="chart-container">
+					<canvas id="line-chart"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-group">
+			<button class="accordion">Restaurant Lists</button>
+			<div class="panel hide no-padding">
+				<ul id="restaurant-listing">
+				</ul>
 			</div>
 		</div>
 	</div>
+	<div id="main">
+		<button class="toggle-side-pane" onclick="toggleSidePanel(this)" title="Expand Side Panel" data-stat="close">▶</button>
+
+		<div id="map"></div>
+	</div>
 
 	<script type="text/javascript" src="/restaurant/assets/js/chartjs/Chart.min.js"></script>
-	<script type="text/javascript" src="/restaurant/assets/js/main.js"></script>
+	<script type="text/javascript" src="/restaurant/assets/js/main.js?v=1.2"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDjrH4k-Yf2FHme-vaBng_4r2EbBbsMbIk&libraries=places,drawing&callback=initMap"
     async defer></script>
 </body>

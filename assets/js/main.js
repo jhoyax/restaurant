@@ -39,8 +39,6 @@ function initMap() {
 		suppressMarkers: true
 	});
 
-	directionsDisplay.setMap(map);
-
 	getCurrentLocation();
 	getRestaurantsInCebu();
 	createDrawingManager();
@@ -264,6 +262,7 @@ function onClickDirection() {
 			map.setCenter(currentPosition);
 			map.setZoom(12);
 
+			directionsDisplay.setMap(map);
         	directionsDisplay.setDirections(response);
       	} else {
         	window.alert('Directions request failed due to ' + status);
@@ -308,24 +307,24 @@ function handleChangeRestaurantSpecialtyInCebu() {
 	  	drawingControl: false
 	});
 	shapeMarkers = deleteMarkers(shapeMarkers);
-	markers = deleteMarkers(markers);
 	deleteAllShape();
-	getCurrentLocation();
-	
-	// clear data when switching filter
-	restaurants = [];
-	document.getElementById('restaurant-listing').innerHTML = '';
-	markers = deleteMarkers(markers);
-	addChartData();
 
 	document.getElementById('specialty-list').style.display = "block";
 	handleChangeSpecialty();
+
+	getCurrentLocation();
 }
 
 /**
  * Handle change event to show specialty
  */
 function handleChangeSpecialty() {
+	// clear data when switching filter
+	restaurants = [];
+	document.getElementById('restaurant-listing').innerHTML = '';
+	markers = deleteMarkers(markers);
+	addChartData();
+
 	let specialtyLists = document.querySelectorAll('input[name="specialty"]:checked');
 	if(specialtyLists.length)
 	{
@@ -338,14 +337,6 @@ function handleChangeSpecialty() {
 		}
 		query += ' ';
 		getRestaurantsInCebu(query, false);
-	}
-	else
-	{
-		// clear data when switching filter
-		restaurants = [];
-		document.getElementById('restaurant-listing').innerHTML = '';
-		markers = deleteMarkers(markers);
-		addChartData();
 	}
 }
 
@@ -567,3 +558,39 @@ function addChartData() {
 	};
 	lineChart.update();
 }
+
+function toggleSidePanel(el) {
+	if(el.getAttribute('data-stat') == 'close') {
+		el.innerHTML = "◀";
+		el.style.marginLeft = "400px";
+		document.getElementById('side-panel').style.width = "400px";
+		document.getElementById('main').style.marginLeft = "400px";
+		el.setAttribute('data-stat', 'open');
+		el.setAttribute('title', 'Collapse Side Panel');
+	} else {
+		el.innerHTML = "▶";
+		el.style.marginLeft = "0";
+		document.getElementById('side-panel').style.width = "0";
+		document.getElementById('main').style.marginLeft = "0";
+		el.setAttribute('data-stat', 'close');
+		el.setAttribute('title', 'Expand Side Panel');
+	}
+}
+
+// accordion function
+var acc = document.getElementsByClassName("accordion");
+for (let i = 0; i < acc.length; i++)
+{
+	acc[i].addEventListener("click", function() {
+		this.classList.toggle("active");
+		var panel = this.nextElementSibling;;
+		if (panel.classList.contains('hide')){
+			panel.classList.remove('hide');
+		} else {
+			panel.classList.add('hide');
+		}
+	});
+}
+
+
+
