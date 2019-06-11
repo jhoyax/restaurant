@@ -449,6 +449,8 @@ function onClickSave(el) {
 function onclickCancel(el) {
 	let parent_td = el.closest('td.td-actions');
 	viewMode(parent_td);
+
+	parent_td.querySelector("input").value = parent_td.querySelector("input").getAttribute("data-orig");
 }
 
 /**
@@ -511,6 +513,7 @@ function editMode(parent_td) {
 	parent_td.appendChild(node2);
 
 	//remove attribute readonly
+	parent_td.querySelector("input").setAttribute("data-orig", parent_td.querySelector("input").value);
 	parent_td.querySelector("input").removeAttribute("readonly");
 }
 
