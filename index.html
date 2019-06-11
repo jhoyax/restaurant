@@ -8,7 +8,10 @@
 	<link rel="stylesheet" type="text/css" href="/restaurant/assets/css/chartjs/Chart.min.css">
 </head>
 <body>
+
 	<div id="side-panel">
+		<a href="javascript:void(0)" onclick="topFunction()" id="scrollTOp" title="Go to top">▲</a>
+
 		<div class="accordion-group">
 			<button class="accordion">Filters</button>
 			<div class="panel hide">
@@ -83,7 +86,7 @@
 		</div>
 	</div>
 	<div id="main">
-		<button class="toggle-side-pane" onclick="toggleSidePanel(this)" title="Expand Side Panel" data-stat="close">▶</button>
+		<a href="javascript:void(0)" class="toggle-side-pane" onclick="toggleSidePanel(this)" title="Expand Side Panel" data-stat="close">▶</a>
 
 		<div id="map"></div>
 	</div>

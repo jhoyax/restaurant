@@ -2,7 +2,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Roboto','sans-serif';
+  font-family: 'Roboto','sans-serif', 'arial';
   font-size: 14px;
 }
 #main {
@@ -99,10 +99,6 @@ td.td-label {
   width: 100px;
 }
 
-div.chart {
-  margin: 10px;
-}
-
 .btn-cancel {
     margin-left: 3px;
 }
@@ -126,18 +122,19 @@ p {
   overflow-x: hidden;
 }
 
-button.toggle-side-pane {
+a.toggle-side-pane {
   position: absolute;
   z-index: 9;
   top: 50%;
   left: 0;
-  width: 23px;
-  height: 48px;
   cursor: pointer;
   background-color: #fff;
   border-left: 1px solid #D4D4D4;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
   transition: margin-left .5s;
+  text-decoration: none;
+  color: #767676;
+  padding: 20px 10px;
 }
 
 #main {
@@ -226,3 +223,23 @@ button:focus {
   outline:0;
 }
 
+a#scrollTOp {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  left: 330px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: rgba(25, 25, 25, 0.5);
+  color: #fff;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+a#scrollTOp:hover {
+  background-color: #555;
+}

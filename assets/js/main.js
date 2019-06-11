@@ -267,7 +267,7 @@ function handleChangeRestaurantInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
-	
+
 	markers = deleteMarkers(markers);
 	shapeMarkers = deleteMarkers(shapeMarkers);
 
@@ -282,9 +282,9 @@ function handleChangeRestaurantInCebu() {
 	document.getElementById('specialty-list').querySelectorAll('li > label > input[type="checkbox"]').forEach(function(element){
 		element.checked = false;
 	});
-	
+
 	getCurrentLocation();
-	
+
 	// plot all restaurant in cebu
 	getRestaurantsInCebu();
 
@@ -300,7 +300,7 @@ function handleChangeDrawShape() {
 	});
 
 	markers = deleteMarkers(markers);
-	
+
 	directionsDisplay.setMap(null);
 
 	// clear data when switching filter
@@ -322,7 +322,7 @@ function handleChangeRestaurantSpecialtyInCebu() {
 		drawingMode: null,
 	  	drawingControl: false
 	});
-	
+
 	markers = deleteMarkers(markers);
 	shapeMarkers = deleteMarkers(shapeMarkers);
 
@@ -584,6 +584,9 @@ function addChartData() {
 	lineChart.update();
 }
 
+/**
+ * Toggle Side Panel
+ */
 function toggleSidePanel(el) {
 	if(el.getAttribute('data-stat') == 'close') {
 		el.innerHTML = "◀";
@@ -618,4 +621,50 @@ for (let i = 0; i < acc.length; i++)
 }
 
 
+// When the user scrolls down 20px from the top of the document, show the button
+document.getElementById('side-panel').onscroll = function() {
+	scrollFunction()
+};
 
+function scrollFunction() {
+  if (document.getElementById('side-panel').scrollTop > 10)
+    document.getElementById("scrollTOp").style.display = "block";
+  else
+    document.getElementById("scrollTOp").style.display = "none";
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  scrollTo(document.getElementById('side-panel'), 0, 500);
+}
+
+
+// Script from here: https://gist.github.com/andjosh/6764939
+function scrollTo(element, to, duration) {
+    var start = element.scrollTop,
+        change = to - start,
+        currentTime = 0,
+        increment = 20;
+
+    var animateScroll = function(){
+        currentTime += increment;
+        var val = Math.easeInOutQuad(currentTime, start, change, duration);
+        element.scrollTop = val;
+        if(currentTime < duration) {
+            setTimeout(animateScroll, increment);
+        }
+    };
+    animateScroll();
+}
+
+//t = current time
+//b = start value
+//c = change in value
+//d = duration
+Math.easeInOutQuad = function (t, b, c, d) {
+  t /= d/2;
+	if (t < 1) return c/2*t*t + b;
+	t--;
+	return -c/2 * (t*(t-2) - 1) + b;
+};
+// END - https://gist.github.com/andjosh/6764939
