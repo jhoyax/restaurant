@@ -605,6 +605,9 @@ function toggleSidePanel(el) {
 		document.getElementById('main').style.marginLeft = "0";
 		el.setAttribute('data-stat', 'close');
 		el.setAttribute('title', 'Expand Side Panel');
+
+		document.getElementById("scrollTOp").style.display = "none";
+		document.getElementById('side-panel').scrollTop = 0;
 	}
 }
 
